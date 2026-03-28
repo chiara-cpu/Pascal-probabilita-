@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pascal e il calcolo delle probabilità</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f5fb;
+      color: #111827;
+    }
+    header {
+      background: linear-gradient(135deg, #1f2937, #111827);
+      color: #f9fafb;
+      padding: 1.8rem 1.5rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.9rem;
+    }
+    header p {
+      margin: 0.4rem 0 0;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+    main {
+      max-width: 1100px;
+      margin: 2rem auto 3rem;
+      padding: 0 1.2rem;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+      gap: 2rem;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+      padding: 1.5rem 1.6rem;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 1.3rem;
+      color: #111827;
+    }
+    h3 {
+      margin-top: 1.3rem;
+      font-size: 1.05rem;
+      color: #111827;
+    }
+    label {
+      display: block;
+      margin: 0.6rem 0 0.2rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #374151;
+    }
+    input, select, button {
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.45rem 0.55rem;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      margin-bottom: 0.2rem;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+      background: #ffffff;
+    }
+    button {
+      margin-top: 0.7rem;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: none;
+      background: #2563eb;
+      color: #ffffff;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.15s ease, transform 0.05s ease;
+    }
+    button:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .result {
+      margin-top: 0.6rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #111827;
+    }
+    .small {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 0.25rem;
+    }
+    .hint {
+      font-size: 0.85rem;
+      color: #4b5563;
+      margin-top: 0.3rem;
+    }
+
+    /* Vignetta Pascal */
+    .pascal-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .pascal-img {
+      width: 100%;
+      border-radius: 12px;
+      background: radial-gradient(circle at top, #e5e7eb, #d1d5db);
+      height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 1rem;
+    }
+    .pascal-figure {
+      width: 120px;
+      height: 170px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #4b5563, #111827);
+      position: relative;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.4);
+    }
+    .pascal-figure::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #f9fafb;
+      box-shadow: 0 0 0 3px #9ca3af;
+    }
+    .pascal-collar {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 40px;
+      background: #e5e7eb;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    .speech-bubble {
+      position: absolute;
+      right: 12px;
+      top: 18px;
+      max-width: 60%;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 0.75rem 0.9rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+    .speech-bubble::after {
+      content: "";
+      position: absolute;
+      left: -10px;
+      bottom: 18px;
+      border-width: 8px;
+      border-style: solid;
+      border-color: transparent #ffffff transparent transparent;
+    }
+    .speech-bubble strong {
+      font-weight: 700;
+    }
+    .pascal-caption {
+      font-size: 0.85rem;
+      color: #4b5563;
+    }
+    code {
+      background: #f3f4f6;
+      padding: 0.1rem 0.25rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Pascal e il calcolo delle probabilità</h1>
+    <p>Dadi, carte e una vignetta con Pascal che ti spiega cosa stai facendo.</p>
+  </header>
+
+  <main>
+    <!-- Sezione calcoli -->
+    <section class="card">
+      <h2>Calcolatore di probabilità</h2>
+
+      <h3>🎲 Probabilità con i dadi</h3>
+      <p class="hint">
+        Esempio: con un dado a 6 facce, la probabilità di ottenere un 6 è 1 su 6.
+      </p>
+      <label for="dice-sides">Numero di facce del dado</label>
+      <input type="number" id="dice-sides" value="6" min="2" />
+
+      <label for="dice-favourable">Esiti favorevoli (quante facce considerate “vincenti”)</label>
+      <input type="number" id="dice-favourable" value="1" min="1" />
+
+      <button onclick="calcDice()">Calcola probabilità</button>
+      <div id="dice-result" class="result"></div>
+      <div class="small">Formula: P = esiti favorevoli / esiti possibili.</div>
+
+      <h3>🃏 Probabilità con le carte</h3>
+      <p class="hint">
+        Esempio: in un mazzo francese da 52 carte, gli assi sono 4 → P = 4/52.
+      </p>
+      <label for="deck-type">Tipo di mazzo</label>
+      <select id="deck-type">
+        <option value="52">Mazzo francese (52 carte)</option>
+        <option value="40">Mazzo italiano (40 carte)</option>
+      </select>
+
+      <label for="cards-favourable">Numero di carte favorevoli</label>
+      <input type="number" id="cards-favourable" value="4" min="1" />
+
+      <button onclick="calcCards()">Calcola probabilità</button>
+      <div id="cards-result" class="result"></div>
+      <div class="small">Formula: P = carte favorevoli / carte totali.</div>
+    </section>
+
+    <!-- Sezione vignetta Pascal -->
+    <aside class="card">
+      <div class="pascal-wrapper">
+        <h2>Pascal ti spiega il risultato</h2>
+        <div class="pascal-img">
+          <div class="pascal-figure">
+            <div class="pascal-collar"></div>
+          </div>
+          <div class="speech-bubble" id="pascal-bubble">
+            «Se il dado ha 6 facce e solo una è vincente,<br>
+            la probabilità è <strong>1/6</strong>.<br>
+            Non so cosa uscirà,<br>
+            ma so quante possibilità ha di uscire.»
+          </div>
+        </div>
+        <p class="pascal-caption">
+          Puoi sostituire questo disegno stilizzato con una vera immagine di Pascal usando:<br>
+          <code>&lt;img src="pascal.png" alt="Blaise Pascal"&gt;</code>
+        </p>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    function formatProb(p) {
+      if (p <= 0) return "0 (evento impossibile)";
+      if (p >= 1) return "1 (evento certo)";
+      return p.toFixed(4) + " (" + (p * 100).toFixed(2) + "%)";
+    }
+
+    function updateBubble(text) {
+      const bubble = document.getElementById("pascal-bubble");
+      bubble.innerHTML = text;
+    }
+
+    function calcDice() {
+      const sides = parseInt(document.getElementById("dice-sides").value, 10);
+      const fav = parseInt(document.getElementById("dice-favourable").value, 10);
+      const resEl = document.getElementById("dice-result");
+
+      if (isNaN(sides) || isNaN(fav) || sides <= 0 || fav < 0 || fav > sides) {
+        resEl.textContent = "Controlla i valori inseriti.";
+        updateBubble("«Controlla bene i dati del problema: anche la probabilità ha bisogno di buone premesse.»");
+        return;
+      }
+
+      const p = fav / sides;
+      resEl.textContent = "Probabilità = " + fav + "/" + sides + " = " + formatProb(p);
+
+      updateBubble(
+        "«Con un dado da " + sides + " facce e " + fav + " faccia/e vincente/i,<br>" +
+        "la probabilità è <strong>" + fav + "/" + sides + "</strong>, cioè circa <strong>" +
+        (p * 100).toFixed(2) + "%</strong>.<br>" +
+        "Non so il risultato del singolo lancio,<br>ma posso misurare le possibilità.»"
+      );
+    }
+
+    function calcCards() {
+      const deck = parseInt(document.getElementById("deck-type").value, 10);
+      const fav = parseInt(document.getElementById("cards-favourable").value, 10);
+      const resEl = document.getElementById("cards-result");
+
+      if (isNaN(deck) || isNaN(fav) || deck <= 0 || fav < 0 || fav > deck) {
+        resEl.textContent = "Controlla i valori inseriti.";
+        updateBubble("«Se i dati non tornano, nessun calcolo può salvarti: ricomincia con calma.»");
+        return;
+      }
+
+      const p = fav / deck;
+      resEl.textContent = "Probabilità = " + fav + "/" + deck + " = " + formatProb(p);
+
+      updateBubble(
+        "«In un mazzo da " + deck + " carte, con " + fav + " carta/e favorevole/i,<br>" +
+        "la probabilità è <strong>" + fav + "/" + deck + "</strong>, cioè circa <strong>" +
+        (p * 100).toFixed(2) + "%</strong>.<br>" +
+        "È così che dal gioco d’azzardo nasce<br>il calcolo delle probabilità.»"
+      );
+    }
+  </script>
+</body>
+</html>
+
