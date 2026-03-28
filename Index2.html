@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Calcolo delle Probabilità – Pascal</title>
+<style>
+  body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+  .box { background: white; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto; }
+  h2 { margin-top: 0; }
+  input, select, button { width: 100%; padding: 10px; margin-top: 10px; }
+  .result { margin-top: 15px; font-weight: bold; font-size: 18px; }
+  .vignetta { margin-top: 25px; padding: 15px; background: #fff; border-radius: 10px; display: flex; gap: 15px; }
+  .vignetta img { width: 120px; border-radius: 10px; }
+  .fumetto { background: #f0f0f0; padding: 10px; border-radius: 10px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>🎲 Calcolo delle probabilità</h2>
+
+  <label>Numero di facce del dado</label>
+  <input id="dadoFacce" type="number" value="6">
+
+  <label>Esiti favorevoli</label>
+  <input id="dadoFav" type="number" value="1">
+
+  <button onclick="calcolaDado()">Calcola probabilità del dado</button>
+
+  <div id="risultatoDado" class="result"></div>
+
+  <hr>
+
+  <label>Mazzo di carte</label>
+  <select id="mazzo">
+    <option value="52">52 carte (francese)</option>
+    <option value="40">40 carte (italiano)</option>
+  </select>
+
+  <label>Carte favorevoli</label>
+  <input id="carteFav" type="number" value="4">
+
+  <button onclick="calcolaCarte()">Calcola probabilità delle carte</button>
+
+  <div id="risultatoCarte" class="result"></div>
+
+  <div class="vignetta">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Blaise_Pascal_Versailles.JPG" alt="Blaise Pascal">
+    <div class="fumetto" id="fumetto">
+      Pascal: «Inserisci i dati e ti mostro la probabilità!»
+    </div>
+  </div>
+</div>
+
+<script>
+function calcolaDado() {
+  let facce = parseInt(document.getElementById("dadoFacce").value);
+  let fav = parseInt(document.getElementById("dadoFav").value);
+
+  let p = fav / facce;
+  let testo = "Probabilità = " + fav + "/" + facce + " = " + (p * 100).toFixed(2) + "%";
+
+  document.getElementById("risultatoDado").innerHTML = testo;
+
+  document.getElementById("fumetto").innerHTML =
+    "Pascal: «Con un dado da " + facce + " facce e " + fav +
+    " esiti favorevoli, la probabilità è " + (p * 100).toFixed(2) + "%.»";
+}
+
+function calcolaCarte() {
+  let mazzo = parseInt(document.getElementById("mazzo").value);
+  let fav = parseInt(document.getElementById("carteFav").value);
+
+  let p = fav / mazzo;
+  let testo = "Probabilità = " + fav + "/" + mazzo + " = " + (p * 100).toFixed(2) + "%";
+
+  document.getElementById("risultatoCarte").innerHTML = testo;
+
+  document.getElementById("fumetto").innerHTML =
+    "Pascal: «In un mazzo da " + mazzo + " carte, con " + fav +
+    " carte favorevoli, la probabilità è " + (p * 100).toFixed(2) + "%.»";
+}
+</script>
+
+</body>
+</html>
